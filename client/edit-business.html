@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>features</title>
+  </head>
+  <body>
+    <h3>Edit or Drop a Business Card</h3>
+    <form>
+      <label for="business_id">Enter business id to edit:</label>
+      <input type="number" name="business_id" id="business_id" />
+      <button id="get-business-data">Get business data</button>
+    </form>
+    <form method="put" action="/businesses">
+      <label for="business_name">Business name:</label>
+      <input type="text" name="business_name" id="business_name" /><br />
+      <label for="desc">Description:</label>
+      <input type="text" name="desc" id="desc" /><br />
+      <label for="address">Address:</label>
+      <input type="text" name="address" id="address" /><br />
+      <label for="phone">Phone:</label>
+      <input type="text" name="phone" id="phone" /><br />
+      <label for="img_url">Image url:</label>
+      <input type="text" name="img_url" id="img_url" /><br />
+      <input type="hidden" name="_METHOD" value="PUT" />
+      <button type="submit" id="edit-business">Edit Business Card</button>
+      <button type="submit" id="drop-business">Delete Business Card</button>
+    </form>
+  </body>
+  <script>
+    document
+      .querySelector("#get-business-data")
+      .addEventListener("click", async (e) => {
+        e.preventDefault();
+        const businessId = document.querySelector("#business_id").value;
+        if (!businessId) {
+          return;
+        }
+        const response = await fetch("/businesses/" + businessId);
+        const businessData = await response.json();
+        if (!businessData.business_name) {
+          alert("Business id does not exist");
+          return;
+        }
+        document.querySelector("#business_name").value =
+          businessData.business_name;
+        document.querySelector("#desc").value = businessData.description;
+        document.querySelector("#address").value = businessData.address;
+        document.querySelector("#img_url").value = businessData.img_url;
+        document.querySelector("#phone").value = businessData.phone;
+      });
+
+    document
+      .querySelector("#drop-business")
+      .addEventListener("click", async (e) => {
+        e.preventDefault();
+        const businessId = document.querySelector("#business_id").value;
+        const response = await fetch("/businesses/delete/" + businessId, {
+          method: "DELETE",
+        });
+        if (response.status == 200) {
+          alert("Deleted successfully");
+        }
+      });
+
+    document
+      .querySelector("#edit-business")
+      .addEventListener("click", async (e) => {
+        e.preventDefault();
+        const businessId = document.querySelector("#business_id").value;
+
+        const updatedData = {
+          business_name: document.querySelector("#business_name").value,
+          description: document.querySelector("#desc").value,
+          address: document.querySelector("#address").value,
+          img_url: document.querySelector("#img_url").value,
+          phone: document.querySelector("#phone").value,
+        };
+
+        const response = await fetch("/businesses/" + businessId, {
+          method: "PUT",
+          body: JSON.stringify(updatedData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.status == 200) {
+          alert("Updated successfully");
+        }
+      });
+  </script>
+</html>
