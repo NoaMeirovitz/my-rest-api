@@ -9,10 +9,9 @@ router.get("/", function (req, res, next) {
   res.send(`Welcome to Noa Meirovitz's rest API, this is our home page. <br><br>
   * To add a customer go to /customers/home <br>
   * To log in go to /login <br>
-  * To see customer details go to /businesses/ and type ID number <br>
   * To add a new business card go to /create-business.html <br>
   * To edit or delete business card go to /edit-business.html <br>
-  * To see business card by ID go to /businesses/ then type business ID number`);
+  * To see business cards by ID go to /businesses/ then type business ID number`);
 });
 
 router.get("/login", function (req, res, next) {
